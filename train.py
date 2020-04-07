@@ -20,20 +20,16 @@ for root, dirs, files in os.walk(faces):
         if file.endswith("png") or file.endswith("jpg"):
             path = os.path.join(root,file)
             label = os.path.basename(os.path.dirname(path)).replace(" ","-").lower()
-            #print(label, " " ,path )
 
             if label not in label_ids:
                 label_ids[label] = current_id
                 current_id += 1
 
             id_ = label_ids[label]
-
-            #print(label_ids)
             
             image = Image.open(path).convert("L")
             image = image.resize((550,550),Image.ANTIALIAS)
             image_array = np.array(image,"uint8")
-            #print(image_array)
             faces = faceCascade.detectMultiScale(
                 image_array,
                 scaleFactor=1.1,
@@ -45,10 +41,6 @@ for root, dirs, files in os.walk(faces):
                 roi = image_array[y:y+h, x:x+w]
                 x_train.append(roi)
                 y_labels.append(id_)
-
-
-print(y_labels)
-print(x_train)
 
 with open("label.pickle","wb") as f:
     pickle.dump(label_ids,f)
